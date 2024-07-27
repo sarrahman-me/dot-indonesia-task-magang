@@ -9,6 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { PaymentAccountModule } from './payment-account/payment_account.module';
 import { PaymentAccount } from './payment-account/payment_account.model';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { PaymentHistoryModule } from './payment-history/payment_history.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
      */
     UsersModule,
     PaymentAccountModule,
+    PaymentHistoryModule,
   ],
   providers: [
     /**

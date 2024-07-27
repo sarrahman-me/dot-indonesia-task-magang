@@ -98,7 +98,24 @@ export class TransactionService {
         account_number: to_address.account_number,
       });
 
-      return this.transactionRepositories.create(payload);
+      const new_transaction =
+        await this.transactionRepositories.create(payload);
+
+      this.userServiceClient.emit('create_history_transaction', {
+        id_transaction: new_transaction.id_transaction,
+        type: 'sender',
+        account_number: from_address.account_number,
+        amount: payload.amount,
+      });
+
+      this.userServiceClient.emit('create_history_transaction', {
+        id_transaction: new_transaction.id_transaction,
+        type: 'receiver',
+        account_number: to_address.account_number,
+        amount: payload.amount,
+      });
+
+      return new_transaction;
     } catch (err) {
       throw err;
     }
