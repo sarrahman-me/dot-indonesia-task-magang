@@ -123,7 +123,7 @@ export class TransactionService {
 
   private async get_payment_account(account_number: string) {
     const response = await fetch(
-      `${process.env.USER_SERVICE}/payment-account/${account_number}`,
+      `${process.env.USER_SERVICE}/users/payment-account/${account_number}`,
       {
         method: 'GET',
         headers: {
