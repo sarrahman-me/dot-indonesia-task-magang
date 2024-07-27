@@ -7,6 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   /**
+   * Set global prefix for all routes
+   */
+  app.setGlobalPrefix('users');
+
+  /**
    * helmet enabled for security
    */
   app.use(helmet());
@@ -28,7 +33,7 @@ async function bootstrap() {
   /**
    * Start REST API server
    */
-  await app.listen(3000);
+  await app.listen(8080);
 
   /**
    * Start consuming messages from RabbitMQ

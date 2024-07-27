@@ -1,0 +1,86 @@
+version: "3"
+services:
+  gateway:
+    build:
+      context: ../gateway
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    container_name: gateway
+    depends_on:
+      - users-service
+      - transaction-service
+    networks:
+      - finance-network
+
+  users-service:
+    build:
+      context: ../users-service
+      dockerfile: Dockerfile
+    container_name: users-service
+    networks:
+      - finance-network
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      - DB_HOST=postgres
+      - RABBITMQ_HOST=amqp://rabbitmq:supersecret@rabbitmq:5672
+
+  transaction-service:
+    build:
+      context: ../transaction-service
+      dockerfile: Dockerfile
+    container_name: transaction-service
+    networks:
+      - finance-network
+    depends_on:
+      - mongodb
+      - rabbitmq
+    environment:
+      - MONGO_HOST=mongodb
+      - USER_SERVICE=http://users-service:8080
+      - RABBITMQ_HOST=amqp://rabbitmq:supersecret@rabbitmq:5672
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+    container_name: rabbitmq
+    networks:
+      - finance-network
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=supersecret
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=supersecret
+      - POSTGRES_DB=finance
+    container_name: postgres
+    networks:
+      - finance-network
+    volumes:
+      - ./postgres/backup:/pg-backup
+      - ./postgres/data:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=transaction-service
+    container_name: mongodb
+    volumes:
+      - ./mongo/data:/data/db
+      - ./mongo/backup:/mongo-backup
+    networks:
+      - finance-network
+
+networks:
+  finance-network:
+    driver: bridge

@@ -11,7 +11,7 @@ import { Users } from './users.model';
 import { responseType } from 'src/interfaces/responseType';
 import { AuthGuard } from './users.guard';
 
-@Controller('/users')
+@Controller('')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
