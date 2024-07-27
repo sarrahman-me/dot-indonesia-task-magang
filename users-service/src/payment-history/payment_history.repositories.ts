@@ -18,4 +18,12 @@ export class PaymentHistoryRepositories {
 
     return this.model.create(data);
   }
+
+  async find_all_history(account_number: string): Promise<PaymentHistory[]> {
+    return this.model.findAll({
+      where: {
+        account_number,
+      },
+    });
+  }
 }
