@@ -8,6 +8,7 @@ import { Users } from './users/users.model';
 import { APP_GUARD } from '@nestjs/core';
 import { PaymentAccountModule } from './payment-account/payment_account.module';
 import { PaymentAccount } from './payment-account/payment_account.model';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -37,6 +38,23 @@ import { PaymentAccount } from './payment-account/payment_account.model';
       models: [Users, PaymentAccount],
       autoLoadModels: true,
     }),
+
+    /**
+     * setting queue routes on rabbitmq
+     */
+    ClientsModule.register([
+      {
+        name: 'USERS_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [process.env.RABBITMQ_HOST],
+          queue: 'users_service',
+          queueOptions: {
+            durable: true,
+          },
+        },
+      },
+    ]),
 
     /**
      * rate limiter

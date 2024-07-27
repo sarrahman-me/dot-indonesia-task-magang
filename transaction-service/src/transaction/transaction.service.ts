@@ -2,12 +2,27 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { TransactionRepositories } from './transaction.repositories';
 import { Transaction } from './transaction.schema';
 import { IpaymentAccount } from 'src/interfaces/payment_account';
+import {
+  ClientProxy,
+  ClientProxyFactory,
+  Transport,
+} from '@nestjs/microservices';
 
 @Injectable()
 export class TransactionService {
+  private readonly userServiceClient: ClientProxy;
+
   constructor(
     private readonly transactionRepositories: TransactionRepositories,
-  ) {}
+  ) {
+    this.userServiceClient = ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [process.env.RABBITMQ_HOST],
+        queue: 'users_service',
+      },
+    });
+  }
 
   async send(payload: {
     amount: number;
@@ -71,9 +86,17 @@ export class TransactionService {
         );
       }
 
-      // const to_address = await this.get_payment_account(payload.to_address);
+      const to_address = await this.get_payment_account(payload.to_address);
 
-      // update saldo kedua akun via message broker
+      this.userServiceClient.emit('update_balance', {
+        amount: from_address.balance - payload.amount,
+        account_number: from_address.account_number,
+      });
+
+      this.userServiceClient.emit('update_balance', {
+        amount: Number(to_address.balance) + payload.amount,
+        account_number: to_address.account_number,
+      });
 
       return this.transactionRepositories.create(payload);
     } catch (err) {

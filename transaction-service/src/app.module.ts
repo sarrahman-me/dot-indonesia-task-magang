@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TransactionModule } from './transaction/transaction.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -27,6 +28,23 @@ import { TransactionModule } from './transaction/transaction.module';
     MongooseModule.forRoot(
       `mongodb://${process.env.MONGO_HOST}:27017/payment-service`,
     ),
+
+    /**
+     * setting queue routes on rabbitmq
+     */
+    ClientsModule.register([
+      {
+        name: 'USERS_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [process.env.RABBITMQ_HOST],
+          queue: 'users_service',
+          queueOptions: {
+            durable: true,
+          },
+        },
+      },
+    ]),
 
     /**
      * rate limiter

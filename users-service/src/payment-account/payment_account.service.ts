@@ -70,4 +70,13 @@ export class PaymentAccountService {
 
     return data;
   }
+
+  async updateBalance(account_number: string, amount: number) {
+    const account = await this.find(account_number);
+
+    await this.paymentAccountRepositories.updateBalance(
+      account.account_number,
+      amount,
+    );
+  }
 }
