@@ -24,6 +24,8 @@ services:
       - postgres
       - rabbitmq
     environment:
+      - DB_PASSWORD=supersecret
+      - JWT_SECRET=supersecret
       - DB_HOST=postgres
       - RABBITMQ_HOST=amqp://rabbitmq:supersecret@rabbitmq:5672
 
@@ -41,6 +43,7 @@ services:
       - MONGO_HOST=mongodb
       - USER_SERVICE=http://users-service:8080
       - RABBITMQ_HOST=amqp://rabbitmq:supersecret@rabbitmq:5672
+      - JWT_SECRET=supersecret
 
   rabbitmq:
     image: rabbitmq
