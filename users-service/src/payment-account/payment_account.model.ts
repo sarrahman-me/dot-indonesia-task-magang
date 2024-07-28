@@ -9,7 +9,7 @@ import {
   Table,
   Unique,
 } from 'sequelize-typescript';
-import { Users } from 'src/users/users.model';
+import { Users } from '../users/users.model';
 
 @Table
 export class PaymentAccount extends Model<PaymentAccount> {

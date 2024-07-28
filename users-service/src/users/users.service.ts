@@ -4,7 +4,7 @@ import { Users } from './users.model';
 import { isEmail } from 'validator';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { PaymentAccountService } from 'src/payment-account/payment_account.service';
+import { PaymentAccountService } from '../payment-account/payment_account.service';
 
 @Injectable()
 export class UsersService {
@@ -185,5 +185,15 @@ export class UsersService {
     }
 
     return data;
+  }
+
+  async removeUserData(email: string) {
+    const data = await this.usersRepositories.find(email);
+
+    await this.paymentAccountService.remove(
+      data.payment_account.account_number,
+    );
+
+    await this.usersRepositories.remove(email);
   }
 }

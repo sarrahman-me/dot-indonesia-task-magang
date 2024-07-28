@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { PaymentAccountService } from './payment_account.service';
-import { responseType } from 'src/interfaces/responseType';
+import { responseType } from '../interfaces/responseType';
 
 @Controller('payment-account')
 export class PaymentAccountController {

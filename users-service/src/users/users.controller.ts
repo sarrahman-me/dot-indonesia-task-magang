@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Users } from './users.model';
-import { responseType } from 'src/interfaces/responseType';
+import { responseType } from '../interfaces/responseType';
 import { AuthGuard } from './users.guard';
 
 @Controller('')
@@ -29,11 +29,12 @@ export class UsersController {
       if (error.response.code == 500) {
         // kirim ke sentry
       }
-      return {
-        data: null,
-        metadata: null,
-        error: error.response,
-      };
+      throw error;
+      // return {
+      //   data: null,
+      //   metadata: null,
+      //   error: error.response,
+      // };
     }
   }
 
@@ -53,11 +54,12 @@ export class UsersController {
       if (error.response.code == 500) {
         // kirim ke sentry
       }
-      return {
-        data: null,
-        metadata: null,
-        error: error.response,
-      };
+      throw error;
+      // return {
+      //   data: null,
+      //   metadata: null,
+      //   error: error.response,
+      // };
     }
   }
 
@@ -83,11 +85,12 @@ export class UsersController {
       if (error.response.code == 500) {
         // kirim ke sentry
       }
-      return {
-        data: null,
-        metadata: null,
-        error: error.response,
-      };
+      throw error;
+      // return {
+      //   data: null,
+      //   metadata: null,
+      //   error: error.response,
+      // };
     }
   }
 }

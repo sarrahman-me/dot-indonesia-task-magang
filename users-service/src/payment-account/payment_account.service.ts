@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PaymentAccountRepositories } from './payment_account.repositories';
 import { PaymentAccount } from './payment_account.model';
-import { Generator } from 'src/helpers/generator';
+import { Generator } from '../helpers/generator';
 
 @Injectable()
 export class PaymentAccountService {
@@ -78,5 +78,9 @@ export class PaymentAccountService {
       account.account_number,
       amount,
     );
+  }
+
+  async remove(account_number: string) {
+    await this.paymentAccountRepositories.remove(account_number);
   }
 }

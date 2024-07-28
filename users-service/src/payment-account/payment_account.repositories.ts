@@ -31,4 +31,12 @@ export class PaymentAccountRepositories {
       { where: { account_number } },
     );
   }
+
+  async remove(account_number: string) {
+    return this.model.destroy({
+      where: {
+        account_number,
+      },
+    });
+  }
 }

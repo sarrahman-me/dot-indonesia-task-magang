@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/sequelize';
 import { Users } from './users.model';
-import { PaymentAccount } from 'src/payment-account/payment_account.model';
+import { PaymentAccount } from '../payment-account/payment_account.model';
 
 export class UsersRepositories {
   constructor(@InjectModel(Users) private readonly model: typeof Users) {}
@@ -22,6 +22,14 @@ export class UsersRepositories {
       },
       include: {
         model: PaymentAccount,
+      },
+    });
+  }
+
+  async remove(email: string): Promise<number> {
+    return this.model.destroy({
+      where: {
+        email,
       },
     });
   }
